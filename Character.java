@@ -2,104 +2,138 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
+package com.mycompany.possibleprojectdesign;
+import java.util.*;
+//import java.util.Random;
 
 /**
  *
- * @author Riley
+ * @author Anna
  */
+// Character class holds all properties of a single character
 public class Character {
-    int power;
-    int toughness;
-    int newT;
-    int damageTaken;
-    int money;
-    int round;
+    String name;
+    int attack;
+    int defense;
+    int cost;
     
-
-   public void setPower(int power){
-             
-        this.power = power;
-    }
-    
-    public int getPower() {
-        return power;
-    
-        }
-    
-    public void setTough(int toughness){
-             
-        this.toughness = toughness;
-    }
-    
-    public int getTough() {
-        return toughness;
-    
-        }
-    
-    public void setDamage(int damageTaken){
-             
-        this.toughness = toughness;
-    }
-    
-    public int getDamage() {
-        return damageTaken;
-        }
-    
-    public void takeDamage()
+    public  Character()
     {
-        this.newT = this.toughness - this.damageTaken;
-        toughness = this.newT;
+        name = "";
+        attack = 0;
+        defense = 0;
+        cost = 0;
     }
-    public void setMoney(int Round){
-        if(Round == 1)
-        money = 10;
-        else if(Round > 1)
+    public Character(String n, int a, int d, int c)
+    {
+        name = n;
+        attack = a;
+        defense = d;
+        cost = c;
+    }
+    public String getName()
+    {
+        return name;
+    }
+    public int getAttack()
+    {
+        return attack;
+    }
+    public int getDefense()
+    {
+        return defense;
+    }
+    public int getCost()
+    {
+        return cost;
+    }
+    public void setName(String n)
+    {
+        name = n;
+    }
+    public void setAttack(int att)
+    {
+        attack = att;
+    }
+    public void setDefense(int def)
+    {
+        defense = def;
+    }
+    public void setCost(int c)
+    {
+        cost = c;
+    }
+    public int battle(Stack teamStack, Stack oppStack, Character ch1, Character ch2)
+    {
+        int teamAttack;
+        int oppAttack;
+        int teamDefense;
+        int oppDefense;
+        
+        while (!teamStack.isEmpty() && !oppStack.isEmpty())
         {
-            money = (10*Round);
-        }
-        else if(Round <= 0)
-        {
-            money = 0;
-        } 
-    }
-    public String getMoney(){
-        return String.valueOf(money);
-    }
-    public void setRound (int number){
-        round = number;
-    }
-    public int getRound (){
-    return round;
-    }
-public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
+            ch1 = (Character) teamStack.peek();
+            ch2 = (Character) oppStack.peek();
+            teamAttack = ch1.attack;
+            oppAttack = ch2.attack;
+            teamDefense = ch1.defense;
+            oppDefense = ch2.defense;
+            
+            if (teamAttack >= oppDefense)
+            {
+                oppStack.pop();
             }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(ShopFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(ShopFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(ShopFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(ShopFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
-
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new ShopFrame().setVisible(true);
+            else if (teamAttack < oppDefense)
+            {
+                ch2.setDefense(oppDefense - teamAttack);
             }
-        });
+            
+            if(oppAttack >= teamDefense)
+            {
+                teamStack.pop();
+            }
+            else if (oppAttack < teamDefense)
+            {
+                 ch1.setDefense(teamDefense - oppAttack);
+            }
+                 
+        }
+        if (teamStack.isEmpty() && oppStack.isEmpty())
+            return 0;
+        else if (teamStack.isEmpty())
+            return -1;
+        else if (oppStack.isEmpty())
+            return 1;
+        return 0;
     }
+    public void generateEnemies(Stack teamStack, Stack oppStack)
+    {
+      Random randGen = new Random();
+      int randNum;
+      Character c;
+      for (int i = 0; i < teamStack.size(); i++)
+      {
+          randNum = randGen.nextInt(3);
+          switch(randNum)
+          {
+              case 0:
+                  c = new Character("lamp", 1, 1, 1);
+                  oppStack.push(c);
+                  break;
+              case 1:
+                  c = new Character("chair", 2, 3, 3);
+                  oppStack.push(c);
+                  break;
+              case 2:
+                  c = new Character("table", 3, 2, 3);
+                  oppStack.push(c);
+                  break;
+          }
+      }
+    }
+    
+    public static void main(String args[]) {
+    }
+    
+    
 }
